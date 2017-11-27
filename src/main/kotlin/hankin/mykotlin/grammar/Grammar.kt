@@ -22,14 +22,28 @@ fun main(args: Array<String>): Unit { // 函数没有返回值的时候为 Unit�
     arr.forEach(::print) // 终极写法 。。
     println()
 
+    println("-----------------------------------------------------------------")
     arr.forEach ForEach@{ // ForEach@ 与 return@ForEach 终止lambda表达式，如果是直接return，那么main函数就return了
         if (it == 'b') return@ForEach
         println(it)
     }
+    class Demo{
+        fun go(ac: (Int) -> String){
+            ac(777)
+        }
+    }
+    var d: Demo = Demo()
+    var some = d.go go@{ // 此处的 go@可以省略
+        if (it == 0) return@go "@go"
+        println(it)
+        "go@"
+    }
+    println(some) // kotlin.Unit
 
     println("-----------------------------------------------------------------")
     println(lambda4({ ch: Char -> abc(ch, 2) }))
     println(lambda4.invoke() {  abc(it, 2) }) // 等同于 ch -> abc(ch,2) 或 ch: Char -> abc(ch, 2)
+    println(lambda3(::bcd)) // 打印的 hehe : 0
     println("-----------------------------------------------------------------")
     println(::sum is (Int, Int)-> Int) // ::sum 表示sum函数的引用？
     println(lambda4)
@@ -39,6 +53,9 @@ fun main(args: Array<String>): Unit { // 函数没有返回值的时候为 Unit�
 fun abc(ch: Char,a: Int): Int{
     println("abc : $ch, ${a+a}")
     return a+a
+}
+fun bcd(a: Int): String{
+    return "hehe : $a"
 }
 
 fun sum(a: Int, b: Int): Int{ // 此函数可以写成 fun sum2(a: Int, b: Int) = a+b
@@ -61,6 +78,10 @@ var lambda2 = {
     println("$a + $b = ${a+b}")
     a+b  // 最后一行为此函数的返回值
 } // 类型 (Int. Int)->Int     Function2
+var lambda3 = {
+    ac: (Int) -> String ->
+    ac(0)
+}
 var lambda4 = {
     ac: (Char) -> Int -> // 注意断句。ac是变量名，(Char) -> Int是一个整体，表示lambda数据类型
     println(ac)          // 所以lambda4就是一个传参为一个 (Char) -> Int 类型lambda表达式的匿名函数

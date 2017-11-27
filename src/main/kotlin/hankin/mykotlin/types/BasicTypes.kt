@@ -52,19 +52,19 @@ fun main(args:Array<String>){
         val a2: Int = 2
         println("$a1 + $a2 = ${a1 + a2}, ${a1}") // 字符串模板。在 "" 中，$表示取变量值，${} 表示运算
 
-        val str: String = """\n$a1""" // """ """ 包起来的字符串，支持字符串模板，但是不支持转义字符
+        val str: String = """\n$a1""" // """ """ 包起来的字符串，支持字符串模板，但是不支持转义字符 打印为 \n1
         println(str)
     }
 
     run {
         println("-----------------------------------------------------------------------------------")
-        var meizi: 妹子 = 妹子("善良", "小巧")
+        var meizi: Meizi = Meizi("善良", "小巧")
         println(meizi is Any)  // is 类似于 java中 instanceof
     }
 
     run {
         println("-----------------------------------------------------------------------------------")
-//        var s: String = getStr() ?: return // ? 判空操作符，如果?前面表达式为null则执行:后面表达式(后面表达式只能是 return ？)
+//        var s: String = getStr() ?: return // ? 判空操作符，如果?前面表达式为null则执行:后面表达式(后面表达式似乎只能是 return )
         println(getStr()?.length)//如果getStr返回不为空输出长度，否则输出 null
 
         val ss: String? = "hello" // String? 定义可以为null 的变量，String定义的变量不能为null
@@ -85,9 +85,9 @@ fun main(args:Array<String>){
     run{
         println("-----------------------------------------------------------------------------------")
         val range: IntRange = 0..1024 // 闭区间 [0, 1024]
-        val until: IntRange = 0 until 1024 // 半开区间 [0, 1024)
+        val unt: IntRange = 0 until 1024 // 半开区间 [0, 1024)
         println(range.isEmpty())
-        println(""+until.contains(50)+","+(100 in until)+","+(100 in 0 until 1024)) // in 也是运算符，ctrl + 鼠标左键 看源码有 operator 运算符重载
+        println(""+unt.contains(50)+","+(100 in unt)+","+(100 !in 0 until 1024)) // in 也是运算符，ctrl + 鼠标左键 看源码有 operator 运算符重载
         for (i in range){ // in 用于遍历
             print("$i, ")
         }
@@ -108,9 +108,12 @@ fun main(args:Array<String>){
 }
 
 // 只写class 默认是final的
-class 妹子 constructor(val 性格: String, var 长相: String){ //只要一个构造函数时 constructor 可以省略。var(变量?)与val(常量value?) 如果class没有内容{}也可以省略
+class Meizi constructor(val xg: String, var zx: String){ //只要一个构造函数时 constructor 可以省略。var(变量?)与val(常量value?) 如果class没有内容{}也可以省略
     init{ // 每次构造时调用
-        println("new le")
+        println("new $xg") // 构造函数中的形参，在类内部也会定义这样的成员属性，在init或其他成员函数里可以使用
+    }
+    fun abc(){
+        xg
     }
 }
 
