@@ -54,7 +54,7 @@ fun abc(ch: Char,a: Int): Int{
     println("abc : $ch, ${a+a}")
     return a+a
 }
-fun bcd(a: Int): String{
+fun bcd(a: Int, c: Char): String{
     return "hehe : $a"
 }
 
@@ -79,8 +79,8 @@ var lambda2 = {
     a+b  // 最后一行为此函数的返回值
 } // 类型 (Int. Int)->Int     Function2
 var lambda3 = {
-    ac: (Int) -> String ->
-    ac(0)
+    ac: (Int, Char) -> String ->
+    ac(0, 'a')
 }
 var lambda4 = {
     ac: (Char) -> Int -> // 注意断句。ac是变量名，(Char) -> Int是一个整体，表示lambda数据类型

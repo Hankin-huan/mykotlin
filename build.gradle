@@ -1,6 +1,14 @@
 group 'hankin.mykotlin'
 version '1.0-SNAPSHOT'
 
+//导出可执行程序，会在IntelliJ右边的Gradle tab栏下的Tasks目录下生成distribution目录
+//双击该目录下的installDist，就可以在工程根目录下的build目录下生成install目录
+//在该目录下 .\build\install\mykotlin\bin\mykotlin       文件是linux环境下的shell脚本
+//          .\build\install\mykotlin\bin\mykotlin.bat   文件是window下的批处理脚本文件
+//          .\build\install\mykotlin\lib    目录下的都是jar包文件
+apply plugin: "application"
+mainClassName = "hankin.mykotlin.operator.ComplexKt"//需要在kotlin文件名后面加上Kt
+
 buildscript {
     ext.kotlin_version = '1.1.60'
 

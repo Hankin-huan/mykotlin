@@ -100,11 +100,27 @@ fun main(args: Array<String>) {
     }
     println(num)
 
-    BufferedReader(FileReader("hello.txt")).use { // use 内部 做了流的关闭操作
-        var line:String?
-        while (true){
-            line = it.readLine()?:break
-            println(line)
-        }
-    }
+//    BufferedReader(FileReader("hello.txt")).use { // use 内部 做了流的关闭操作
+//        var line:String?
+//        while (true){
+//            line = it.readLine()?:break
+//            println(line)
+//        }
+//    }
+
+    println("------------------------------------------------------------------------------------")
+    var array = intArrayOf(17, 18)
+    method(ints = *array, str = "str") // str = "str" 表示具名参数传参，可以防止产生歧义，*array表示展开数组(list暂不支持)
+    ddd(b = 2.0, a = 1) // 具名参数传参时，可以忽略传参顺序
+
+    var input = readLine()
+    input?.trim()?.split(",")
+    println(input!!)
+}
+
+fun method(d: Double = 3.0, vararg ints: Int, str: String){//默认参数、可变长参数(因为具名参数存在，不用放在最后一个参数)
+    ints.forEach(::println)
+}
+fun ddd(a: Int, b: Double){
+    println("$a, $b")
 }
