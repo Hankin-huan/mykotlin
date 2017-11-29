@@ -1,5 +1,8 @@
 package hankin.mykotlin.classes
 
+import hankin.mykotlin.annotations.PoKo
+import kotlin.reflect.KProperty
+
 class People(var xg: String, var zx: String){
     lateinit var ss: String
     init {
@@ -107,6 +110,55 @@ var String.num: Int // 扩展String的成员属性
 
     }
     get() = 7
+
+class X(){
+    private var str: String? = null // 这里的String 可以为任意数据类型
+//    public inline operator fun <T> Lazy<T>.getValue(thisRef: Any?, property: KProperty<*>): T = value // Lazy源码
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String{ // 这里的String 可以为任意数据类型
+        println("getValue : $thisRef --- ${property.name}") // thisRef为Delegates类，property.name为Delegates类中被代理的成员属性名字
+        return str?: "str is null"
+    }
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String){ // 这里的String 可以为任意数据类型
+        println("setValue : $thisRef --- ${property.name} = $value")//thisRef为Delegates类，property.name为Delegates类中被代理的成员属性名字，value为设置的值
+        this.str = value
+    }
+}
+class Delegates{
+    val hi1 by lazy{
+        "Delegates hi1"
+    }
+    val hi2 by X() // val的属性代理只需要在 X 中重写操作符 getValue
+    var hi3 by X() // var的属性代理还需要在 X 中重写操作符 setValue
+}
+
+@PoKo // 让数据类不是final，且带无参构造函数
+data class Y(var id: Int, var name: String) // data定义数据类(带copy函数)，默认是final的，且只带一个带两个参数的构造函数
+open class Z{
+    operator fun component1(): String = "this component1" // 非 data 类可以重写componentN 操作符
+}
+
+interface Listener{
+    fun on()
+}
+class V{
+    var lis: Listener? = null
+}
+class Out{
+    val a = 0
+    inner class Inn{ // kotlin内部类默认的是静态的，使用inner关键字定义为非静态的内部类
+        val a = 1
+        fun abc(){
+            this@Inn.a // Inn类的a
+            this@Out.a // Out类的a
+            var v = V()
+            v.lis = object : Z(), Listener{ // 匿名内部类写法，kotlin的匿名内部类还可以继承其他类和实现其他接口的
+                override fun on() {
+                }
+            }
+        }
+    }
+}
+
 fun main(args: Array<String>) {
     var clz: IFace = MyClass(21, C())
     println(clz.num) // 21
@@ -123,4 +175,22 @@ fun main(args: Array<String>) {
     var str = ""
     str.num = 3
     println(str.num) // 7
+
+    println("---------------------------------------------------------------------")
+    var delegate = Delegates()
+    println(delegate.hi1)
+    println(delegate.hi2)
+    delegate.hi3 = "hulala"
+    println(delegate.hi3)
+
+    println("---------------------------------------------------------------------")
+    var y = Y(0, "hankin")
+    println("${y.component1()}, ${y.component2()}") // 数据类重写了componentN操作符   0, hankin
+    val(a1, a2) = y // 将y中的两个属性赋值给a1 a2 ， for((index, value) in array.withIndex()) 也是这种做法
+    println("$a1, $a2") // 0, hankin
+    var z = Z()
+    var(a3) = z
+    println("${z.component1()}: $a3") // this component1: this component1
+
+    var inn = Out().Inn() // 非静态的内部类是持有外部类的状态的，创建实例时需要用外部类的对象.出来，静态类才能直接Inn()。java中也是这个性质
 }

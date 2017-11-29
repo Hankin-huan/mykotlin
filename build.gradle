@@ -17,11 +17,26 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        //用于解决data class定义了数据类的为final，构造函数只有带参的一个的问题
+        //添加这两个插件后，data class数据类就不是final，且带无参的构造函数。但这些只是编译期的，编辑时无法找到无参构造函数，需要通过反射调用无参构造函数
+        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'kotlin'
+//解决data class问题，在dependencies模块中只是将插件添加到了classpath中，这里是应用此插件，在gradle应用后最好rebuild一下项目
+apply plugin: 'kotlin-noarg'
+apply plugin: 'kotlin-allopen'
+//应用插件后，还需要做一些配置，如果你的数据类被 @PoKo 标注后就不是final的了，且带一个无参的构造函数。可以在编辑期继承此数据类
+noArg{
+    annotation("hankin.mykotlin.annotations.PoKo")
+}
+allOpen{
+    annotation("hankin.mykotlin.annotations.PoKo")
+}
 
 sourceCompatibility = 1.8
 
