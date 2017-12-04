@@ -159,6 +159,23 @@ class Out{
     }
 }
 
+//枚举，性质就是一个类
+enum class MYTYPE constructor(val id: Int){
+    SHUAI(7), HENSHUAI(8); // 如果枚举值后面还要跟函数的话，需要用 ; 号隔开
+    fun getArgs(): Int{ // 自定义函数，函数名不能是getId，报错。。。
+        return id
+    }
+    override fun toString(): String {
+        return "$id, $name, $ordinal" // name对应 SHUAI ，ordinal对应SHUAI在第几个位置
+    }
+}
+
+//密封类，此类只能在同一个文件中的类可以继承
+sealed class Seal{
+    class S1: Seal()
+    object S2: Seal() // 匿名内部类
+}
+
 fun main(args: Array<String>) {
     var clz: IFace = MyClass(21, C())
     println(clz.num) // 21
@@ -193,4 +210,8 @@ fun main(args: Array<String>) {
     println("${z.component1()}: $a3") // this component1: this component1
 
     var inn = Out().Inn() // 非静态的内部类是持有外部类的状态的，创建实例时需要用外部类的对象.出来，静态类才能直接Inn()。java中也是这个性质
+
+    println("---------------------------------------------------------------------")
+    MYTYPE.values().map(::println)
+    println("${MYTYPE.SHUAI}, ${MYTYPE.valueOf("SHUAI")}, ${MYTYPE.SHUAI.getArgs()}")
 }
