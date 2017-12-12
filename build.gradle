@@ -10,7 +10,8 @@ apply plugin: "application"
 mainClassName = "hankin.mykotlin.operator.ComplexKt"//需要在kotlin文件名后面加上Kt
 
 buildscript {
-    ext.kotlin_version = '1.1.60'
+    //可以在settings -> plugins 里搜索查看kotlin插件版本
+    ext.kotlin_version = '1.2.0'
 
     repositories {
         mavenCentral()
