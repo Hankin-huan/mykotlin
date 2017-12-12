@@ -1,6 +1,18 @@
-package hankin.mykotlin.classes
+package hankin.mykotlin.func
 
+import java.io.BufferedReader
+import java.io.FileReader
 import java.io.OutputStream
+
+fun aaa(arg: Any){
+    println(arg)
+}
+
+open class A{
+    fun println(arg: Any){
+        kotlin.io.println(arg)
+    }
+}
 
 data class ListNode(var value: Int, var next: ListNode? = null)
 
@@ -12,7 +24,7 @@ tailrec fun getNode(value: Int, node: ListNode?): ListNode?{
 }
 
 fun makeFun(): ()->Unit{
-     var num = 0//num像是static的，不会随着makeFun函数的运行完而内存回收
+    var num = 0//num像是static的，不会随着makeFun函数的运行完而内存回收
     return fun(){
         println(++num)
     }
@@ -43,22 +55,53 @@ fun mylog(tag: String, target: OutputStream, msg: Any?){
 }
 //柯里化
 fun curryingLog(tag: String)
-    = fun(target: OutputStream)
-    = fun(msg: Any?)
-    = target.write("$tag, $msg\n".toByteArray())
+        = fun(target: OutputStream)
+        = fun(msg: Any?)
+                = target.write("$tag, $msg\n".toByteArray())
 //将Function3的函数柯里化，fun顺序可以随便的，只需要在传实参时对应顺序就行
 fun <P1, P2, P3, R> Function3<P1, P2, P3, R>.curried()
-    = fun(p2: P2)
-    = fun(p1: P1)
-    = fun(p3: P3)
-    = this(p1, p2, p3)
+        = fun(p2: P2)
+        = fun(p1: P1)
+                = fun(p3: P3)
+                        = this(p1, p2, p3)
 //偏函数，绑定函数某些参数
 fun <P1, P2, P3, R> Function3<P1, P2, P3, R>.partial(p2: P2)
-    = fun(p1: P1)
-    = fun(p3: P3)
-    = this(p1, p2, p3)
+        = fun(p1: P1)
+        = fun(p3: P3)
+                = this(p1, p2, p3)
 
 fun main(args: Array<String>) {
+    val arr = arrayOf("", "tang")
+    val pa = A::println
+    println("-----------------------------------------------------------------------------------------------")
+    //函数引用的三种方式：包级引用、类引用、实例引用
+    arr.forEach(::aaa)
+    println(arr.filter(String::isNotEmpty)) // filter 的集合不能有 null 即String？ 类型
+    val a = A()
+    val pp = a::println
+    arr.forEach(a::println) // 不能 A::println 传入，需要以实例的方式
+    println("-----------------------------------------------------------------------------------------------")
+    val list = listOf(1..3, 1..2)
+    val mapList = list.flatMap {
+        it.map {
+            it
+        }
+    }
+    mapList.forEach(::println)
+    
+    println(mapList.reduce { acc, i -> acc+i })
+//    arr.fold()
+
+    println("-----------------------------------------------------------------------------------------------")
+    BufferedReader(FileReader("hello.txt")).use { // use 已经实现了流的关闭
+        var line: String?
+        while (true){
+            line = it.readLine() ?: break
+            println(line)
+        }
+    }
+
+    println("-----------------------------------------------------------------------------------------------")
     val max = 100000
     val head = ListNode(0)
     var p = head
